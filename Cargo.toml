@@ -1,0 +1,6 @@
+[package]
+name = "bn254-bls"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
