@@ -1,9 +1,9 @@
 use crate::fq::Fq;
 use crate::params::FROBENIUS_COEFF_FQ2_C1;
-
+use core::fmt::{Debug, Formatter, Result};
 use core::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub(crate) struct Fq2(pub(crate) [Fq; 2]);
 
 impl Fq2 {
@@ -123,5 +123,11 @@ impl Mul<Fq2> for Fq2 {
 impl MulAssign for Fq2 {
     fn mul_assign(&mut self, rhs: Self) {
         *self = *self * rhs;
+    }
+}
+
+impl Debug for Fq2 {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        write!(f, "{:?} + {:?} u", self.0[0], self.0[1])
     }
 }

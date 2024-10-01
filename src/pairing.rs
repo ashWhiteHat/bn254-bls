@@ -1,6 +1,4 @@
-use crate::fq::Fq;
 use crate::fq12::Fq12;
-use crate::fq2::Fq2;
 use crate::g1::G1Affine;
 use crate::g2::{G2Affine, G2PairingAffine};
 use crate::gt::Gt;

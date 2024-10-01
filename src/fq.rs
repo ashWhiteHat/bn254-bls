@@ -1,7 +1,9 @@
 //! base field
 
-use crate::limbs::{add, double, invert, little_fermat, mont, mul, neg, square, sub};
+use crate::limbs::{add, double, invert, little_fermat, mont, mul, neg, random_limbs, square, sub};
+use core::fmt::{Debug, Formatter, Result};
 use core::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub};
+use rand_core::RngCore;
 
 pub(crate) const MODULUS: [u64; 4] = [
     0x3c208c16d87cfd47,
@@ -18,10 +20,26 @@ pub(crate) const R: [u64; 4] = [
     0x0e0a77c19a07df2f,
 ];
 
+/// R^2 = 2^512 mod q
+pub(crate) const R2: [u64; 4] = [
+    0xf32cfc5b538afa89,
+    0xb5e71911d44501fb,
+    0x47ab1eff0a417ff6,
+    0x06d89f71cab8351f,
+];
+
+/// R^3 = 2^768 mod q
+pub(crate) const R3: [u64; 4] = [
+    0xb1cd6dafda1530df,
+    0x62f210e6a7283db6,
+    0xef7f0b0c0ada0afb,
+    0x20fd6e902d592544,
+];
+
 /// INV = -(q^{-1} mod 2^64) mod 2^64
 pub(crate) const INV: u64 = 0x87d20782e4866389;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub(crate) struct Fq(pub(crate) [u64; 4]);
 
 impl Fq {
@@ -53,11 +71,19 @@ impl Fq {
     }
 
     pub(crate) const fn to_mont_form(val: [u64; 4]) -> Self {
-        Self(mont(
-            [val[0], val[1], val[2], val[3], 0, 0, 0, 0],
+        Self(mul(val, R2, MODULUS, INV))
+    }
+
+    pub(crate) const fn montgomery_reduce(self) -> [u64; 4] {
+        mont(
+            [self.0[0], self.0[1], self.0[2], self.0[3], 0, 0, 0, 0],
             MODULUS,
             INV,
-        ))
+        )
+    }
+
+    pub(crate) fn random<R: RngCore>(rand: &mut R) -> Self {
+        Self(random_limbs(rand, R2, R3, MODULUS, INV))
     }
 }
 
@@ -102,5 +128,34 @@ impl Mul<Fq> for Fq {
 impl MulAssign for Fq {
     fn mul_assign(&mut self, rhs: Self) {
         *self = *self * rhs;
+    }
+}
+
+impl Debug for Fq {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        write!(f, "0x")?;
+        for limb in self.montgomery_reduce().iter().rev() {
+            for byte in limb.to_be_bytes() {
+                write!(f, "{:02x}", byte)?;
+            }
+        }
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use rand_core::OsRng;
+
+    #[test]
+    fn test_montgomery() {
+        let mut rng = OsRng;
+        for _ in 0..100000 {
+            let s = Fq::random(&mut rng);
+            let r = s.montgomery_reduce();
+            let s_prime = Fq::to_mont_form(r);
+            assert_eq!(s, s_prime);
+        }
     }
 }

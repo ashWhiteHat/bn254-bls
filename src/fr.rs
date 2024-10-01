@@ -1,9 +1,10 @@
 //! scalar field
 
+use core::fmt::{Debug, Formatter, Result};
 use core::ops::Mul;
 use rand_core::RngCore;
 
-use crate::limbs::{mul, random_limbs};
+use crate::limbs::{mont, mul, random_limbs};
 
 pub(crate) const MODULUS: [u64; 4] = [
     0x43e1f593f0000001,
@@ -39,11 +40,20 @@ pub(crate) const R3: [u64; 4] = [
 /// INV = -(r^{-1} mod 2^64) mod 2^64
 pub const INV: u64 = 0xc2e1f593efffffff;
 
+#[derive(Clone, Copy)]
 pub struct Fr(pub [u64; 4]);
 
 impl Fr {
     pub fn random<R: RngCore>(rand: &mut R) -> Self {
         Self(random_limbs(rand, R2, R3, MODULUS, INV))
+    }
+
+    pub(crate) const fn montgomery_reduce(self) -> [u64; 4] {
+        mont(
+            [self.0[0], self.0[1], self.0[2], self.0[3], 0, 0, 0, 0],
+            MODULUS,
+            INV,
+        )
     }
 }
 
@@ -52,5 +62,17 @@ impl Mul<Fr> for Fr {
 
     fn mul(self, rhs: Self) -> Self {
         Self(mul(self.0, rhs.0, MODULUS, INV))
+    }
+}
+
+impl Debug for Fr {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        write!(f, "0x")?;
+        for limb in self.montgomery_reduce().iter().rev() {
+            for byte in limb.to_be_bytes() {
+                write!(f, "{:02x}", byte)?;
+            }
+        }
+        Ok(())
     }
 }

@@ -1,5 +1,3 @@
-use core::ops::{Mul, MulAssign};
-
 use crate::fq::Fq;
 use crate::fq2::Fq2;
 use crate::fq6::Fq6;
@@ -8,7 +6,10 @@ use crate::g2::PairingCoeff;
 use crate::gt::Gt;
 use crate::params::{BN_X, FROBENIUS_COEFF_FQ12_C1};
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+use core::fmt::{Debug, Formatter, Result};
+use core::ops::{Mul, MulAssign};
+
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct Fq12([Fq6; 2]);
 
 impl Fq12 {
@@ -312,5 +313,11 @@ impl Mul<Fq12> for Fq12 {
 impl MulAssign for Fq12 {
     fn mul_assign(&mut self, rhs: Self) {
         *self = *self * rhs;
+    }
+}
+
+impl Debug for Fq12 {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        write!(f, "{:?} + ({:?}) w", self.0[0], self.0[1])
     }
 }

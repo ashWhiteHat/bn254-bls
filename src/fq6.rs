@@ -1,9 +1,9 @@
 use crate::fq2::Fq2;
 use crate::params::{FROBENIUS_COEFF_FQ6_C1, FROBENIUS_COEFF_FQ6_C2};
-use core::ops::{Add, Mul, Sub, SubAssign};
-use std::ops::Neg;
+use core::fmt::{Debug, Formatter, Result};
+use core::ops::{Add, Mul, Neg, Sub, SubAssign};
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub(crate) struct Fq6(pub(crate) [Fq2; 3]);
 
 impl Fq6 {
@@ -163,5 +163,15 @@ impl Mul<Fq6> for Fq6 {
         }
 
         Self([t1, t2, t3])
+    }
+}
+
+impl Debug for Fq6 {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        write!(
+            f,
+            "{:?} + ({:?}) v + ({:?}) v^2",
+            self.0[0], self.0[1], self.0[2]
+        )
     }
 }

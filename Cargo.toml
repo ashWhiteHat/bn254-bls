@@ -4,4 +4,4 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-rand_core = { version="0.6.4" }
+rand_core = { version="0.6.4", features = ["getrandom"] }
