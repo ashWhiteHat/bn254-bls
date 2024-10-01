@@ -3,6 +3,28 @@ use crate::fq2::Fq2;
 
 pub(crate) const BN_X: u64 = 4965661367192848881;
 
+// 6U+2 for in NAF form
+pub(crate) const SIX_U_PLUS_2_NAF: [i8; 65] = [
+    0, 0, 0, 1, 0, 1, 0, -1, 0, 0, 1, -1, 0, 0, 1, 0, 0, 1, 1, 0, -1, 0, 0, 1, 0, -1, 0, 0, 0, 0,
+    1, 1, 1, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 1, 0, 0, -1, 0, 0, 0, 1, 1, 0, -1, 0,
+    0, 1, 0, 1, 1,
+];
+
+pub(crate) const XI_TO_Q_MINUS_1_OVER_2: Fq2 = Fq2([
+    Fq([
+        0xe4bbdd0c2936b629,
+        0xbb30f162e133bacb,
+        0x31a9d1b6f9645366,
+        0x253570bea500f8dd,
+    ]),
+    Fq([
+        0xa1d77ce45ffe77c7,
+        0x07affd117826d1db,
+        0x6d16bd27bb7edc6b,
+        0x2c87200285defecc,
+    ]),
+]);
+
 pub(crate) const FROBENIUS_COEFF_FQ2_C1: [Fq; 2] = [
     // Fq(-1)**(((q^0) - 1) / 2)
     Fq([
