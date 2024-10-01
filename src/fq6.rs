@@ -175,3 +175,22 @@ impl Debug for Fq6 {
         )
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::fq::Fq;
+    use rand_core::OsRng;
+
+    #[test]
+    fn test_fq2_mul_nonresidue() {
+        let mut rng = OsRng;
+        let b = Fq2([Fq::from(9), Fq::one()]);
+        for _ in 0..1000 {
+            let a = Fq2::random(&mut rng);
+            let expected = a * b;
+
+            assert_eq!(a.mul_by_nonres(), expected)
+        }
+    }
+}

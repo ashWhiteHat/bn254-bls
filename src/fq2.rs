@@ -2,6 +2,7 @@ use crate::fq::Fq;
 use crate::params::FROBENIUS_COEFF_FQ2_C1;
 use core::fmt::{Debug, Formatter, Result};
 use core::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+use rand_core::RngCore;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub(crate) struct Fq2(pub(crate) [Fq; 2]);
@@ -68,6 +69,14 @@ impl Fq2 {
         let c1 = self.0[1] * FROBENIUS_COEFF_FQ2_C1[power % 2];
 
         Self([c0, c1])
+    }
+
+    pub(crate) fn random<R: RngCore>(rand: &mut R) -> Self {
+        let mut limbs: [Fq; 2] = [Fq::zero(); 2];
+        for i in 0..2 {
+            limbs[i] = Fq::random(rand);
+        }
+        Self(limbs)
     }
 }
 

@@ -1,6 +1,8 @@
 //! base field
 
-use crate::limbs::{add, double, invert, little_fermat, mont, mul, neg, random_limbs, square, sub};
+use crate::limbs::{
+    add, double, from_u64, invert, little_fermat, mont, mul, neg, random_limbs, square, sub,
+};
 use core::fmt::{Debug, Formatter, Result};
 use core::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub};
 use rand_core::RngCore;
@@ -128,6 +130,12 @@ impl Mul<Fq> for Fq {
 impl MulAssign for Fq {
     fn mul_assign(&mut self, rhs: Self) {
         *self = *self * rhs;
+    }
+}
+
+impl From<u64> for Fq {
+    fn from(val: u64) -> Fq {
+        Fq(from_u64(val, R2, MODULUS, INV))
     }
 }
 
