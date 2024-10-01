@@ -18,9 +18,12 @@ impl Fq12 {
     }
 
     pub fn square(self) -> Self {
-        let re = self.0[0].square() - self.0[1].square();
-        let im = (self.0[0] * self.0[1]).double();
-        Self([re, im])
+        let ab = self.0[0] * self.0[1];
+        let c0c1 = self.0[0] + self.0[1];
+        let c0 = self.0[1].mul_by_nonres() + self.0[0];
+        let tmp = c0 * c0c1 - ab;
+
+        Self([tmp - ab.mul_by_nonres(), ab.double()])
     }
 
     pub fn square_assign(&mut self) {

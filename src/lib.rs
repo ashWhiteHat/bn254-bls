@@ -11,6 +11,8 @@ mod math;
 mod pairing;
 mod params;
 
+pub use fq12::Fq12;
+pub use fr::Fr;
 pub use g1::G1Affine;
 pub use g2::G2Affine;
 pub use gt::Gt;
