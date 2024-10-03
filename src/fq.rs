@@ -84,7 +84,7 @@ impl Fq {
         )
     }
 
-    pub(crate) fn random<R: RngCore>(rand: &mut R) -> Self {
+    pub fn random<R: RngCore>(rand: &mut R) -> Self {
         Self(random_limbs(rand, R2, R3, MODULUS, INV))
     }
 }

@@ -4,7 +4,7 @@ use core::fmt::{Debug, Formatter, Result};
 use core::ops::Mul;
 use rand_core::RngCore;
 
-use crate::limbs::{mont, mul, random_limbs};
+use crate::limbs::{mont, mul, random_limbs, to_nafs, Nafs};
 
 pub(crate) const MODULUS: [u64; 4] = [
     0x43e1f593f0000001,
@@ -54,6 +54,10 @@ impl Fr {
             MODULUS,
             INV,
         )
+    }
+
+    pub(crate) fn to_nafs(self) -> Nafs {
+        to_nafs(self.montgomery_reduce())
     }
 }
 

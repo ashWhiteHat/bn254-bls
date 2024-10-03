@@ -21,6 +21,7 @@ pub use pairing::AteParing;
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand_core::OsRng;
 
     #[test]
     fn test_final_exp() {
@@ -47,5 +48,28 @@ mod tests {
 
         assert_eq!(p, q);
         assert_eq!(q, r);
+    }
+
+    #[test]
+    fn test_normal_pairing() {
+        let g1 = G1Affine::generator();
+        let g2 = G2Affine::generator();
+        let mut rng = OsRng;
+
+        for _ in 0..10 {
+            let a = Fr::random(&mut rng);
+            let b = Fr::random(&mut rng);
+            let c = a * b;
+
+            let g = G1Affine::from(g1 * a);
+            let h = G2Affine::from(g2 * b);
+            let p = AteParing::pairing(g, h);
+
+            let expected = G1Affine::from(g1 * c);
+            let test = G2Affine::from(g2 * c);
+
+            assert_eq!(p, AteParing::pairing(expected, g2));
+            assert_eq!(p, AteParing::pairing(g1, test));
+        }
     }
 }

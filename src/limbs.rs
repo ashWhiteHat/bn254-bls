@@ -1,6 +1,5 @@
-use rand_core::RngCore;
-
 use crate::math::{adb, adc, mac, sba, sbb};
+use rand_core::RngCore;
 
 #[inline(always)]
 pub(crate) const fn add(a: [u64; 4], b: [u64; 4], p: [u64; 4]) -> [u64; 4] {
@@ -285,4 +284,54 @@ pub fn random_limbs(
 
 pub const fn from_u64(val: u64, r2: [u64; 4], p: [u64; 4], inv: u64) -> [u64; 4] {
     mul([val, 0, 0, 0], r2, p, inv)
+}
+
+#[derive(Clone, Copy, Eq, PartialEq, Debug)]
+pub(crate) enum Naf {
+    Zero = 0,
+    Plus = 1,
+    Minus = 2,
+}
+
+impl From<i8> for Naf {
+    fn from(value: i8) -> Self {
+        match value {
+            0 => Naf::Zero,
+            1 => Naf::Plus,
+            -1 => Naf::Minus,
+            _ => unimplemented!(),
+        }
+    }
+}
+
+pub(crate) type Nafs = Vec<Naf>;
+
+#[inline(always)]
+pub(crate) fn to_nafs(val: [u64; 4]) -> Nafs {
+    let mut index = 0;
+    let mut bits: [u8; 258] = [0; 258];
+    for limb in val {
+        for byte in limb.to_le_bytes().iter() {
+            for i in 0..8 {
+                bits[index] = byte >> i & 1;
+                index += 1;
+            }
+        }
+    }
+    let mut carry = 0;
+    let mut nafs: Vec<Naf> = bits
+        .iter()
+        .map(|bit| {
+            let triple = bit * 3;
+            let bit_3 = (triple + carry) % 2;
+            carry = (triple + carry) / 2;
+            (bit_3 as i8 - *bit as i8).into()
+        })
+        .collect::<Vec<_>>()
+        .into_iter()
+        .rev()
+        .skip_while(|x| x == &Naf::Zero)
+        .collect::<Vec<_>>();
+    nafs.pop();
+    nafs
 }

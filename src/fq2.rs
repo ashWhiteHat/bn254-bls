@@ -71,7 +71,7 @@ impl Fq2 {
         Self([c0, c1])
     }
 
-    pub(crate) fn random<R: RngCore>(rand: &mut R) -> Self {
+    pub fn random<R: RngCore>(rand: &mut R) -> Self {
         let mut limbs: [Fq; 2] = [Fq::zero(); 2];
         for i in 0..2 {
             limbs[i] = Fq::random(rand);
