@@ -1,8 +1,8 @@
-use crate::fq12::Fq12;
-use crate::g1::G1Affine;
-use crate::g2::{G2Affine, G2PairingAffine};
-use crate::gt::Gt;
-use crate::params::SIX_U_PLUS_2_NAF;
+use crate::bn254::fq12::Fq12;
+use crate::bn254::g1::G1Affine;
+use crate::bn254::g2::{G2Affine, G2PairingAffine};
+use crate::bn254::gt::Gt;
+use crate::bn254::params::SIX_U_PLUS_2_NAF;
 
 /// Ate pairing struct holds necessary components for pairing.
 /// `pairing` function takes G1 and G2 group elements and output

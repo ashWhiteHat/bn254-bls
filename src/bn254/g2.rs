@@ -1,8 +1,8 @@
-use crate::fq::Fq;
-use crate::fq2::Fq2;
-use crate::fr::Fr;
-use crate::limbs::Naf;
-use crate::params::{FROBENIUS_COEFF_FQ6_C1, SIX_U_PLUS_2_NAF, XI_TO_Q_MINUS_1_OVER_2};
+use crate::bn254::fq::Fq;
+use crate::bn254::fq2::Fq2;
+use crate::bn254::fr::Fr;
+use crate::bn254::limbs::Naf;
+use crate::bn254::params::{FROBENIUS_COEFF_FQ6_C1, SIX_U_PLUS_2_NAF, XI_TO_Q_MINUS_1_OVER_2};
 use core::ops::{Add, AddAssign, Mul, Neg, SubAssign};
 
 #[derive(Clone, Copy, Debug)]

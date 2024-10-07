@@ -1,6 +1,6 @@
-use crate::fq::Fq;
-use crate::fr::Fr;
-use crate::limbs::Naf;
+use crate::bn254::fq::Fq;
+use crate::bn254::fr::Fr;
+use crate::bn254::limbs::Naf;
 use core::ops::{Add, AddAssign, Mul, Neg, SubAssign};
 
 pub(crate) const G1_GENERATOR_X: Fq = Fq::one();

@@ -1,6 +1,6 @@
 //! base field
 
-use crate::limbs::{
+use crate::bn254::limbs::{
     add, double, from_u64, invert, little_fermat, mont, mul, neg, random_limbs, square, sub,
 };
 use core::fmt::{Debug, Formatter, Result};

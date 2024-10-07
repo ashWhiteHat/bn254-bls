@@ -1,5 +1,5 @@
 # BLS Signature on Bn254
-This crate includes field and extension fields, curve implementation. There are two curve $G1$ and $G2$ described as following.
+BLS signature implementation on bn254 (alt_bn128 / bn256) curve according to [EIP-196](https://eips.ethereum.org/EIPS/eip-196).
 
 $G1: y^2 = x^3 + 3$
 

@@ -1,5 +1,5 @@
-use crate::fq2::Fq2;
-use crate::params::{FROBENIUS_COEFF_FQ6_C1, FROBENIUS_COEFF_FQ6_C2};
+use crate::bn254::fq2::Fq2;
+use crate::bn254::params::{FROBENIUS_COEFF_FQ6_C1, FROBENIUS_COEFF_FQ6_C2};
 use core::fmt::{Debug, Formatter, Result};
 use core::ops::{Add, Mul, Neg, Sub, SubAssign};
 
@@ -179,7 +179,7 @@ impl Debug for Fq6 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::fq::Fq;
+    use crate::bn254::fq::Fq;
     use rand_core::OsRng;
 
     #[test]

@@ -1,6 +1,5 @@
+use crate::bn254::fq12::Fq12;
 use core::ops::{Add, Neg};
-
-use crate::fq12::Fq12;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Gt(pub Fq12);

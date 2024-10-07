@@ -1,10 +1,10 @@
-use crate::fq::Fq;
-use crate::fq2::Fq2;
-use crate::fq6::Fq6;
-use crate::g1::G1Affine;
-use crate::g2::PairingCoeff;
-use crate::gt::Gt;
-use crate::params::{BN_X, FROBENIUS_COEFF_FQ12_C1};
+use crate::bn254::fq::Fq;
+use crate::bn254::fq2::Fq2;
+use crate::bn254::fq6::Fq6;
+use crate::bn254::g1::G1Affine;
+use crate::bn254::g2::PairingCoeff;
+use crate::bn254::gt::Gt;
+use crate::bn254::params::{BN_X, FROBENIUS_COEFF_FQ12_C1};
 
 use core::fmt::{Debug, Formatter, Result};
 use core::ops::{Mul, MulAssign};
