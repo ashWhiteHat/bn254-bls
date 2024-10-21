@@ -364,3 +364,23 @@ impl G1Affine {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use rand_core::OsRng;
+
+    #[test]
+    fn test_is_on_curve() {
+        let generator = G1Affine::generator();
+        assert!(generator.is_on_curve());
+
+        for _ in 0..10 {
+            let mut rng = OsRng;
+            let r = Fr::random(&mut rng);
+            let point = G1Affine::from(generator * r);
+
+            assert!(point.is_on_curve())
+        }
+    }
+}
