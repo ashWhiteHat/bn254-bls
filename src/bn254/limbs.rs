@@ -1,4 +1,4 @@
-use crate::bn254::math::{adb, adc, mac, sba, sbb};
+use super::math::{adb, adc, mac, sba, sbb};
 use rand_core::RngCore;
 
 #[inline(always)]

@@ -1,4 +1,4 @@
-use crate::bn254::fq12::Fq12;
+use super::fq12::Fq12;
 use core::ops::{Add, Neg};
 
 #[derive(Debug, PartialEq, Eq)]

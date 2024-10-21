@@ -1,5 +1,5 @@
-use crate::bn254::fq::Fq;
-use crate::bn254::fq2::Fq2;
+use super::fq::Fq;
+use super::fq2::Fq2;
 
 pub(crate) const BN_X: u64 = 4965661367192848881;
 

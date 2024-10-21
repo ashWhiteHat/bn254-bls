@@ -1,2 +1,2 @@
-mod bls;
-mod bn254;
+pub mod bls;
+pub mod bn254;

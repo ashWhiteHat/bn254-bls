@@ -1,6 +1,6 @@
-use crate::bn254::fq::Fq;
-use crate::bn254::fr::Fr;
-use crate::bn254::limbs::Naf;
+use super::fq::Fq;
+use super::fr::Fr;
+use super::limbs::Naf;
 use core::ops::{Add, AddAssign, Mul, Neg, SubAssign};
 
 pub(crate) const G1_GENERATOR_X: Fq = Fq::one();
@@ -44,6 +44,14 @@ impl G1Affine {
             x: self.x,
             y: self.y,
             z: Fq::one(),
+        }
+    }
+
+    pub(crate) fn is_on_curve(self) -> bool {
+        if self.is_infinity {
+            true
+        } else {
+            self.y.square() == self.x.square() * self.x + G1_PARAM_B
         }
     }
 }
@@ -320,4 +328,39 @@ pub fn scalar_point(point: G1Affine, scalar: Fr) -> G1Projective {
         }
     }
     res
+}
+
+impl G1Affine {
+    pub fn to_bytes(self) -> [u8; 64] {
+        let mut res = [0u8; 64];
+        res[0..32].copy_from_slice(&self.x.to_bytes());
+        res[32..64].copy_from_slice(&self.y.to_bytes());
+
+        res
+    }
+
+    fn from_bytes(bytes: [u8; 64]) -> Option<Self> {
+        let mut x_bytes = [0u8; 32];
+        x_bytes.copy_from_slice(&bytes[0..32]);
+        let x = Fq::from_bytes(x_bytes);
+
+        let mut y_bytes = [0u8; 32];
+        y_bytes.copy_from_slice(&bytes[0..32]);
+        let y = Fq::from_bytes(y_bytes);
+
+        x.and_then(|x| {
+            y.and_then(|y| {
+                let point = Self {
+                    x,
+                    y,
+                    is_infinity: false,
+                };
+
+                match point.is_on_curve() {
+                    true => Some(point),
+                    false => None,
+                }
+            })
+        })
+    }
 }

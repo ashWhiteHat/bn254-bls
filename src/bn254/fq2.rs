@@ -1,5 +1,5 @@
-use crate::bn254::fq::Fq;
-use crate::bn254::params::FROBENIUS_COEFF_FQ2_C1;
+use super::fq::Fq;
+use super::params::FROBENIUS_COEFF_FQ2_C1;
 use core::fmt::{Debug, Formatter, Result};
 use core::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 use rand_core::RngCore;

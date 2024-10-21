@@ -1,8 +1,9 @@
 //! base field
 
-use crate::bn254::limbs::{
+use super::limbs::{
     add, double, from_u64, invert, little_fermat, mont, mul, neg, random_limbs, square, sub,
 };
+use super::math::sbb;
 use core::fmt::{Debug, Formatter, Result};
 use core::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub};
 use rand_core::RngCore;
@@ -148,6 +149,37 @@ impl Debug for Fq {
             }
         }
         Ok(())
+    }
+}
+
+impl Fq {
+    pub fn to_bytes(self) -> [u8; 32] {
+        let mut res = [0; 32];
+        let tmp = self.montgomery_reduce();
+        res[0..8].copy_from_slice(&tmp[0].to_le_bytes());
+        res[8..16].copy_from_slice(&tmp[1].to_le_bytes());
+        res[16..24].copy_from_slice(&tmp[2].to_le_bytes());
+        res[24..32].copy_from_slice(&tmp[3].to_le_bytes());
+
+        res
+    }
+
+    pub fn from_bytes(bytes: [u8; 32]) -> Option<Self> {
+        let l0 = u64::from_le_bytes(bytes[0..8].try_into().unwrap());
+        let l1 = u64::from_le_bytes(bytes[8..16].try_into().unwrap());
+        let l2 = u64::from_le_bytes(bytes[16..24].try_into().unwrap());
+        let l3 = u64::from_le_bytes(bytes[24..32].try_into().unwrap());
+
+        let (_, borrow) = sbb(l0, MODULUS[0], 0);
+        let (_, borrow) = sbb(l1, MODULUS[1], borrow);
+        let (_, borrow) = sbb(l2, MODULUS[2], borrow);
+        let (_, borrow) = sbb(l3, MODULUS[3], borrow);
+
+        if borrow & 1 == 1 {
+            Some(Self([l0, l1, l2, l3]) * Self(R2))
+        } else {
+            None
+        }
     }
 }
 

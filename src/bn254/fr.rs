@@ -4,7 +4,7 @@ use core::fmt::{Debug, Formatter, Result};
 use core::ops::Mul;
 use rand_core::RngCore;
 
-use crate::bn254::limbs::{mont, mul, random_limbs, to_nafs, Nafs};
+use super::limbs::{mont, mul, random_limbs, to_nafs, Nafs};
 
 pub(crate) const MODULUS: [u64; 4] = [
     0x43e1f593f0000001,
